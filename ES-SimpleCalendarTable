@@ -1,0 +1,31 @@
+CalendarTable = 
+    var InitDate = DATE ( YEAR ( MIN('Table'[Date])), 1, 1 )
+    var FinishDate = DATE ( YEAR ( MAX('Table'[Date])), 12, 31 )
+    
+return
+
+ADDCOLUMNS (
+CALENDAR (InitDate,FinishDate),
+
+"Fecha", DATE(YEAR([Date]),MONTH([Date]),DAY([Date])),     //--   Fecha: fecha en la notación habitual (dd-mm-yyyy).
+"FechaTexto", FORMAT ( [Date], "dddd dd, mmmm , yyyy" ),     //--   FechaTexto: fecha formateada ( por ejemplo
+"FechaEntero", FORMAT ( [Date], "YYYYMMDD" ),     //--   FechaEntero:  fecha en la notacion yyyymmdd para procesarla como enteros. Será la clave de la dimensión.
+"Año", YEAR ( [Date] ),     //--   Año: año de la fecha, con 4 digitos.
+"SemetredeAño", FORMAT ( [Date], "YYYY" ) & "/S" & ROUNDUP(DIVIDE(MONTH([Date]),6),0),     //--   SemetredeAño: notacion año-semestre para comparativas, cabeceras (YYYY-SS, 2008-1S).
+"TrimestredelAño", FORMAT ( [Date], "YYYY" ) & "/Q" & FORMAT ( [Date], "Q" ),     //--   TrimestredelAño: notacion año-trimestre para comparativas, cabeceras (YYYY-TT, 2008-1T).
+"MesAñoNumerico", FORMAT ( [Date], "YYYY/MM" ),     //--   MesAñoNumerico: notación numerica año-mes para comparativas,cabeceras (YYYY-MM, 2008-11).
+"MesAñoTextual", FORMAT ( [Date], "YYYY/mmm" ),     //--   MesAñoTextual: notación textual año-mes para comparativas,cabeceras (YYYY-MM, 2008-11).
+"SemanaAño", FORMAT ( [Date], "YYYY" ) & "/W" & WEEKNUM([Date],2),     //--   SemanaAño: notacion año-semana para comparativas, cabeceras (YYYY-SS, 2008-45).
+"Trimestre", "Q" & FORMAT ( [Date], "Q" ),     //--   Trimestre: trimestre donde se incluye la fecha (1T,2T,3T o 4T).
+"TrimestreNumerico", FORMAT ( [Date], "Q" ),     //--   TrimestreNumerico: numero de trimestre del año (1,2,3,4)
+"SemestreNumerico", ROUNDUP(DIVIDE(MONTH([Date]),6),0),     //--   SemestreNumerico: semestre donde se incluye la fecha (1S, 2S).
+"MesNumerico", MONTH([Date]),     //--   MesNumerico: número del mes en el año (Enero = 1, Febrero = 2, etc).
+"MesTextoCorto", FORMAT ( [Date], "mmm" ),     //--   MesTextoCorto: descripción en texto del mes (Enero, Febrero, Marzo,…).
+"MexTextoLargo", FORMAT ( [Date], "mmmm" ),     //--   MexTextoLargo: descripción en texto del mes (Jan, Feb, Mar,…).
+"SemanaNumero", WEEKNUM([Date],2),     //--   SemanaNumero:  numero de semana donde se incluye la fecha (semana 23).
+"DiadeAño", DATEDIFF ( DATE ( YEAR ( [Date] ), 1, 1 ),[Date], DAY ) + 1,     //--   DiadeAño: numero de día de la fecha en el año (dia 234, dia 365).
+"DiadeMes", DAY([date]),     //--   DiadeMes: numero de dia de la fecha en el mes (dia 14, dia 28, dia 31).
+"DiadeSemanaNumero", WEEKDAY ( [Date] ),     //--   DiadeSemanaNumero:  dia 1,2,3…7.
+"DiadeSemanaTexto", FORMAT ( [Date], "dddd" ),     //--   DiadeSemanaTexto:   dia de la semana en texto (miercoles,martes, miercoles,..).
+"FindeSemana", IF(WEEKDAY ( [Date],2 )=6 ||WEEKDAY ( [Date],2 )=7,TRUE,FALSE),     //--   FindeSemana: indicador si la fecha es fin de semana o dia entre semana.
+"DiadeSemanaTextoCorto", FORMAT ( [Date], "ddd" ))     //--   DiadeSemanaTextoCorto: dia de la semana en texto corto (Mon,Tue,Wed,..).
