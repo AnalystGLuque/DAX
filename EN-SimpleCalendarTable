@@ -1,0 +1,33 @@
+CalendarTable = 
+    var InitDate = DATE ( YEAR ( MIN('Table'[Date])), 1, 1 )
+    var FinishDate = DATE ( YEAR ( MAX('Table'[Date])), 12, 31 )
+    
+return
+
+ADDCOLUMNS (
+CALENDAR (InitDate,FinishDate),
+
+"DateDays",DATE(YEAR([Date]),MONTH([Date]),DAY([Date])),     //--   Date: date in the usual notation (dd-mm-yyyy).
+"DateText",FORMAT ( [Date], "dddd dd, mmmm , yyyy" ),     //--   Date in text: formatted date (for example: April 15, 2009).
+"DateAsInteger", FORMAT ( [Date], "YYYYMMDD" ),     //--   Key Date: date in yyyymmdd notation to process as integers. It will be the key to the dimension.
+"Year", YEAR ( [Date] ),     //--   Year: year of the date, with 4 digits.
+"YearSemester",FORMAT ( [Date], "YYYY" ) & "/S" & ROUNDUP(DIVIDE(MONTH([Date]),6),0),     //--   Semester of the year: year-semester notation for comparisons, headers (YYYY-SS, 2008-S1).
+"YearQuarter", FORMAT ( [Date], "YYYY" ) & "/Q" & FORMAT ( [Date], "Q" ),     //--   Quarter of the year: year-quarter notation for comparisons, headlines (YYYY-TT, 2008-Q1).
+"YearMonthnumber", FORMAT ( [Date], "YYYY/MM" ),     //--   Numerical month of the year: numeric year-month notation for comparisons, headers (YYYY-MM, 2008-11).
+"YearMonthShort", FORMAT ( [Date], "YYYY/mmm" ),     //--   Textual month of the year: textual year-month notation for comparisons, headers (YYYY-MM, 2008-11).
+"YearWeekNumber", FORMAT ( [Date], "YYYY" ) & "/W" & WEEKNUM([Date],2),     //--   Week of the year: year-week notation for comparisons, headlines (YYYY-SS, 2008-45).
+"Quarter", "Q" & FORMAT ( [Date], "Q" ),     //--   Quarter: quarter where the date is included (Q1, Q2, Q3 or Q4).
+"QuarterNumber", FORMAT ( [Date], "Q" ),     //--   Quarter: quarter number of the year (1,2,3,4)
+"SemesterNumber", ROUNDUP(DIVIDE(MONTH([Date]),6),0),     //--   Semester: semester where the date is included (1S, 2S).
+"Monthnumber", MONTH([Date]),     //--   Month: number of the month in the year (January = 1, February = 2, etc).
+"MonthNameShort", FORMAT ( [Date], "mmm" ),     //--   Month Description: text description of the month (January, February, March,…).
+"MonthNameLong", FORMAT ( [Date], "mmmm" ),     //--   Month Description: text description of the month (Jan, Feb, Mar,…).
+"WeekNumber", WEEKNUM([Date],2),     //--   Week: week number where the date is included (week 23).
+"DayofYearNumber",DATEDIFF ( DATE ( YEAR ( [Date] ), 1, 1 ),[Date], DAY ) + 1,     //--   Day of the Year: day number of the date in the year (day 234, day 365).
+"DayofMonth", DAY([date]),     //--   Day of the Month: day number of the date in the month (day 14, day 28, day 31).
+"DayOfWeekNumber", WEEKDAY ( [Date] ),     //--   Number of day of the week: day 1,2,3…7.
+"DayOfWeek", FORMAT ( [Date], "dddd" ),     //--   Day of the week: day of the week in text (Wednesday, Tuesday, Wednesday,...).
+"IsWeekend", IF(WEEKDAY ( [Date],2 )=6 ||WEEKDAY ( [Date],2 )=7,TRUE,FALSE),     //--   Weekend: indicator if the date is a weekend or a weekday.
+"DayOfWeekShort", FORMAT ( [Date], "ddd" ))     //--   Short day of the week: day of the week in short text (Mon,Tue,Wed,..).
+
+
